@@ -118,6 +118,7 @@
             text-rendering: optimizeLegibility;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
         }
 
         body {
@@ -2771,6 +2772,17 @@
                 position: fixed;
                 top: 24px;
                 right: 24px;
+            }
+
+            .hero-shapes,
+            .hero-spotlight,
+            .floating-shape {
+                display: none;
+            }
+
+            .about-sidebar {
+                width: 100%;
+                margin-top: 32px;
             }
 
             .project-visual {
