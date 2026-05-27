@@ -222,17 +222,16 @@
 
         /* Ultra-refined Custom Cursor */
         .cursor {
-            width: 24px;
-            height: 24px;
-            border: 0.75px solid var(--charcoal);
+            width: 26px;
+            height: 26px;
+            border: 1.5px solid var(--rust);
             border-radius: 50%;
             position: fixed;
             pointer-events: none;
             z-index: 9999;
             transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
             transform: translate(-50%, -50%);
-            opacity: 0.25;
-            mix-blend-mode: difference;
+            opacity: 0.7;
         }
 
         .cursor::before {
@@ -240,18 +239,18 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 2px;
-            height: 2px;
+            width: 3px;
+            height: 3px;
             background: var(--rust);
             border-radius: 50%;
             transform: translate(-50%, -50%);
             transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-            opacity: 0.7;
+            opacity: 1;
         }
 
         .cursor-dot {
-            width: 2px;
-            height: 2px;
+            width: 5px;
+            height: 5px;
             background: var(--rust);
             border-radius: 50%;
             position: fixed;
@@ -259,14 +258,15 @@
             z-index: 9999;
             transform: translate(-50%, -50%);
             transition: all 0.02s linear;
-            opacity: 0.5;
+            opacity: 0.95;
+            box-shadow: 0 0 4px rgba(184, 92, 78, 0.4);
         }
 
         .cursor.hover {
-            transform: translate(-50%, -50%) scale(2.5);
+            transform: translate(-50%, -50%) scale(2.2);
             border-color: var(--rust);
-            opacity: 0.15;
-            border-width: 0.5px;
+            opacity: 0.5;
+            border-width: 1px;
         }
 
         .cursor.hover::before {
@@ -508,6 +508,135 @@
         .lang-toggle:hover::after {
             transform: scaleX(1);
             transform-origin: left;
+        }
+
+        /* Hamburger Button (mobile only) */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            background: none;
+            border: none;
+            cursor: none;
+            padding: 0;
+            gap: 5px;
+            z-index: 1002;
+            position: relative;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 22px;
+            height: 1.5px;
+            background: var(--charcoal);
+            border-radius: 1px;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            transform-origin: center;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(6.5px) rotate(45deg);
+            background: var(--rust);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-6.5px) rotate(-45deg);
+            background: var(--rust);
+        }
+
+        /* Mobile Menu Overlay */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(180deg, rgba(255, 254, 249, 0.98) 0%, rgba(247, 246, 243, 0.98) 100%);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 32px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-20px);
+            transition: opacity 0.5s cubic-bezier(0.23, 1, 0.32, 1), transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), visibility 0s linear 0.5s;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            transition: opacity 0.5s cubic-bezier(0.23, 1, 0.32, 1), transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), visibility 0s linear 0s;
+        }
+
+        .mobile-menu a,
+        .mobile-menu button {
+            font-family: 'Fraunces', serif;
+            font-size: 32px;
+            font-weight: 300;
+            color: var(--text-primary);
+            text-decoration: none;
+            background: none;
+            border: none;
+            cursor: none;
+            letter-spacing: -0.012em;
+            padding: 8px 16px;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .mobile-menu.active a,
+        .mobile-menu.active button {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .mobile-menu.active a:nth-child(1) { transition-delay: 0.12s; }
+        .mobile-menu.active a:nth-child(2) { transition-delay: 0.18s; }
+        .mobile-menu.active a:nth-child(3) { transition-delay: 0.24s; }
+        .mobile-menu.active button { transition-delay: 0.30s; }
+
+        .mobile-menu a:hover,
+        .mobile-menu button:hover {
+            color: var(--rust);
+            font-style: italic;
+        }
+
+        .mobile-menu .mobile-lang-toggle {
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-top: 16px;
+            padding: 10px 24px;
+            border: 0.5px solid var(--border);
+            border-radius: 24px;
+        }
+
+        .mobile-menu .mobile-lang-toggle:hover {
+            color: var(--rust);
+            border-color: var(--rust);
+            font-style: normal;
+        }
+
+        body.menu-open {
+            overflow: hidden;
         }
 
         /* Hero Section with extraordinary refinements */
@@ -2637,6 +2766,19 @@
                 display: none;
             }
 
+            .hamburger {
+                display: flex;
+            }
+
+            .project-visual {
+                display: none;
+            }
+
+            .project-wrapper {
+                grid-template-columns: 1fr !important;
+                gap: 0 !important;
+            }
+
             .hero {
                 padding: 180px 24px 100px;
             }
@@ -2739,8 +2881,23 @@
                     </button>
                 </li>
             </ul>
+            <button type="button" class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu" id="mobileMenu" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+        <a href="#work" data-en="Work" data-ko="작업">Work</a>
+        <a href="#about" data-en="About" data-ko="소개">About</a>
+        <a href="#contact" data-en="Contact" data-ko="연락">Contact</a>
+        <button type="button" id="mobileLangToggle" class="mobile-lang-toggle" aria-label="Toggle Language">
+            <span class="mobile-lang-text">한국어</span>
+        </button>
+    </div>
 
     <!-- Hero -->
     <section class="hero">
@@ -3486,8 +3643,8 @@
                 contactTitle: '함께 혁신적인 것을 만들어요',
                 contactSubtitle: '게임 개발, 웹 기술, AI 통합을 결합하는 도전적인 프로젝트에 항상 관심이 있습니다. 현재 자동화 및 AI 기반 워크플로우 기회를 탐색하고 있습니다.',
                 contactEmail: '이메일',
-                contactGithub: 'GitHub',
-                contactLinkedin: 'LinkedIn',
+                contactGithub: '깃허브',
+                contactLinkedin: '링크드인',
                 contactThreads: '스레드',
             contactBlog: '블로그',
 
@@ -3619,6 +3776,21 @@
 
             // Update language toggle button
             document.querySelector('.lang-text').textContent = lang === 'en' ? '한국어' : 'English';
+
+            // Update mobile lang text
+            const mobileLangText = document.querySelector('.mobile-lang-text');
+            if (mobileLangText) {
+                mobileLangText.textContent = lang === 'en' ? '한국어' : 'English';
+            }
+
+            // Update mobile menu nav links
+            document.querySelectorAll('.mobile-menu a').forEach(link => {
+                const en = link.getAttribute('data-en');
+                const ko = link.getAttribute('data-ko');
+                if (en && ko) {
+                    link.textContent = lang === 'en' ? en : ko;
+                }
+            });
         }
 
         // Language toggle button event
@@ -3626,6 +3798,46 @@
             currentLang = currentLang === 'en' ? 'ko' : 'en';
             updateContent(currentLang);
             localStorage.setItem('preferredLanguage', currentLang);
+        });
+
+        // Mobile menu hamburger toggle
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        function closeMobileMenu() {
+            hamburger.classList.remove('active');
+            mobileMenu.classList.remove('active');
+            document.body.classList.remove('menu-open');
+            hamburger.setAttribute('aria-expanded', 'false');
+        }
+
+        hamburger.addEventListener('click', () => {
+            const isActive = hamburger.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+            document.body.classList.toggle('menu-open');
+            hamburger.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.mobile-menu a').forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+
+        // Mobile language toggle
+        const mobileLangToggle = document.getElementById('mobileLangToggle');
+        if (mobileLangToggle) {
+            mobileLangToggle.addEventListener('click', () => {
+                currentLang = currentLang === 'en' ? 'ko' : 'en';
+                updateContent(currentLang);
+                localStorage.setItem('preferredLanguage', currentLang);
+            });
+        }
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && mobileMenu.classList.contains('active')) {
+                closeMobileMenu();
+            }
         });
 
         // Load saved language preference
