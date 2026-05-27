@@ -636,6 +636,37 @@
             font-style: normal;
         }
 
+        .mobile-menu-close {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            background: none;
+            border: 0.5px solid var(--border);
+            border-radius: 24px;
+            padding: 8px 18px;
+            cursor: none;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1), transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .mobile-menu.active .mobile-menu-close {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 0.18s;
+        }
+
+        .mobile-menu-close:hover {
+            color: var(--rust);
+            border-color: var(--rust);
+        }
+
         body.menu-open {
             overflow: hidden;
         }
@@ -2912,6 +2943,7 @@
 
     <!-- Mobile Menu Overlay -->
     <div class="mobile-menu" id="mobileMenu" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+        <button type="button" class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu" data-en="Close" data-ko="닫기">Close</button>
         <a href="#work" data-en="Work" data-ko="작업">Work</a>
         <a href="#about" data-en="About" data-ko="소개">About</a>
         <a href="#contact" data-en="Contact" data-ko="연락">Contact</a>
@@ -3843,6 +3875,12 @@
         document.querySelectorAll('.mobile-menu a').forEach(link => {
             link.addEventListener('click', closeMobileMenu);
         });
+
+        // Close button inside mobile menu
+        const mobileMenuClose = document.getElementById('mobileMenuClose');
+        if (mobileMenuClose) {
+            mobileMenuClose.addEventListener('click', closeMobileMenu);
+        }
 
         // Mobile language toggle
         const mobileLangToggle = document.getElementById('mobileLangToggle');
