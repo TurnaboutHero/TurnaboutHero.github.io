@@ -583,7 +583,7 @@
         }
 
         .mobile-menu a,
-        .mobile-menu button {
+        .mobile-menu button:not(.mobile-menu-close) {
             font-family: 'Fraunces', serif;
             font-size: 32px;
             font-weight: 300;
@@ -601,7 +601,7 @@
         }
 
         .mobile-menu.active a,
-        .mobile-menu.active button {
+        .mobile-menu.active button:not(.mobile-menu-close) {
             opacity: 1;
             transform: translateY(0);
         }
@@ -612,7 +612,7 @@
         .mobile-menu.active button { transition-delay: 0.30s; }
 
         .mobile-menu a:hover,
-        .mobile-menu button:hover {
+        .mobile-menu button:not(.mobile-menu-close):hover {
             color: var(--rust);
             font-style: italic;
         }
@@ -636,7 +636,7 @@
             font-style: normal;
         }
 
-        .mobile-menu-close {
+        .mobile-menu .mobile-menu-close {
             position: absolute;
             top: 24px;
             left: 24px;
@@ -662,7 +662,7 @@
             transition-delay: 0.18s;
         }
 
-        .mobile-menu-close:hover {
+        .mobile-menu .mobile-menu-close:hover {
             color: var(--rust);
             border-color: var(--rust);
         }
