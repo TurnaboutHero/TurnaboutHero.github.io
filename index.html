@@ -735,40 +735,6 @@
             transition: font-weight 0.3s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        /* Traveling outline effect */
-        .hero h1::before {
-            content: 'Designing thoughtful products that scale with intention.';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            color: transparent;
-            -webkit-text-stroke: 0.3px rgba(184, 92, 78, 0.2);
-            text-stroke: 0.3px rgba(184, 92, 78, 0.2);
-            opacity: 0;
-            clip-path: circle(0% at 0% 50%);
-            animation: outlineReveal 12s cubic-bezier(0.23, 1, 0.32, 1) 3s infinite;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        @keyframes outlineReveal {
-            0%, 100% {
-                clip-path: circle(0% at 0% 50%);
-                opacity: 0;
-            }
-            15% {
-                opacity: 1;
-            }
-            50% {
-                clip-path: circle(150% at 0% 50%);
-                opacity: 1;
-            }
-            85% {
-                opacity: 0;
-            }
-        }
-
         /* Split each word for magnetic effect */
         .hero h1 .word {
             display: inline-block;
