@@ -18,6 +18,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Apply saved/preferred theme before first paint to avoid a flash -->
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('preferredTheme');
+                var dark = saved ? saved === 'dark'
+                    : window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (dark) document.documentElement.setAttribute('data-theme', 'dark');
+            } catch (e) {}
+        })();
+    </script>
     <title>HunHui Kim — Game Developer & Web Developer</title>
     <meta name="description" content="Game Developer & Web Developer with expertise in Unity, React, and full-stack web development. Building innovative experiences with AI integration.">
     
@@ -86,6 +97,48 @@
             --border: #e8e7e3;
             --unit: 8px;
             --golden-ratio: 1.618;
+            /* Framed-card surfaces (project visuals stay light in both themes) */
+            --nav-bg-top: rgba(255, 254, 249, 0.98);
+            --nav-bg-bottom: rgba(255, 254, 249, 0.94);
+            --menu-bg-top: rgba(255, 254, 249, 0.98);
+            --menu-bg-bottom: rgba(247, 246, 243, 0.98);
+            --surface-raised: #ffffff;
+            color-scheme: light;
+        }
+
+        /* Warm dark theme — the "night version" of the paper aesthetic.
+           Backgrounds go to warm espresso; earth-tone accents are preserved. */
+        [data-theme="dark"] {
+            --charcoal: #f0ece3;
+            --cream: #17130f;
+            --sand: #221d17;
+            --rust: #c9685a;
+            --sage: #8fae98;
+            --ochre: #dcb079;
+            --text-primary: #f0ece3;
+            --text-secondary: #b3a99b;
+            --text-tertiary: #8a8276;
+            --border: #332c23;
+            --nav-bg-top: rgba(23, 19, 15, 0.96);
+            --nav-bg-bottom: rgba(23, 19, 15, 0.90);
+            --menu-bg-top: rgba(23, 19, 15, 0.98);
+            --menu-bg-bottom: rgba(34, 29, 23, 0.98);
+            --surface-raised: #2a241d;
+            color-scheme: dark;
+        }
+
+        /* Smooth cross-fade when switching themes */
+        body,
+        .nav,
+        .mobile-menu,
+        .card-layer {
+            transition: background 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+                        color 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+                        border-color 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            body, .nav, .mobile-menu, .card-layer { transition: none; }
         }
 
         * {
@@ -318,7 +371,7 @@
             position: fixed;
             top: 0;
             width: 100%;
-            background: linear-gradient(180deg, rgba(255, 254, 249, 0.98) 0%, rgba(255, 254, 249, 0.94) 100%);
+            background: linear-gradient(180deg, var(--nav-bg-top) 0%, var(--nav-bg-bottom) 100%);
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
             z-index: 1000;
@@ -511,6 +564,58 @@
             transform-origin: left;
         }
 
+        /* Theme (dark mode) toggle — mirrors the language toggle */
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: none;
+            padding: 4px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 0;
+            transition: color 0.35s cubic-bezier(0.23, 1, 0.32, 1),
+                        transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .theme-toggle:hover {
+            color: var(--rust);
+            transform: rotate(-18deg) scale(1.08);
+        }
+
+        .theme-toggle svg {
+            width: 17px;
+            height: 17px;
+        }
+
+        .theme-toggle .icon-sun { display: none; }
+        .theme-toggle .icon-moon { display: block; }
+        [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+        [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+
+        .mobile-theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: none;
+            padding: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 20px;
+            font-weight: 450;
+            transition: color 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .mobile-theme-toggle:hover { color: var(--rust); }
+        .mobile-theme-toggle svg { width: 20px; height: 20px; }
+        .mobile-theme-toggle .icon-sun { display: none; }
+        .mobile-theme-toggle .icon-moon { display: block; }
+        [data-theme="dark"] .mobile-theme-toggle .icon-sun { display: block; }
+        [data-theme="dark"] .mobile-theme-toggle .icon-moon { display: none; }
+
         /* Hamburger Button (mobile only) */
         .hamburger {
             display: none;
@@ -560,7 +665,7 @@
             left: 0;
             width: 100%;
             height: 100vh;
-            background: linear-gradient(180deg, rgba(255, 254, 249, 0.98) 0%, rgba(247, 246, 243, 0.98) 100%);
+            background: linear-gradient(180deg, var(--menu-bg-top) 0%, var(--menu-bg-bottom) 100%);
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
             z-index: 1001;
@@ -1057,9 +1162,71 @@
             overflow: visible;
             cursor: none;
             font-variant-numeric: tabular-nums;
-            box-shadow: 
+            box-shadow:
                 0 1px 3px rgba(0, 0, 0, 0.04),
                 0 2px 6px rgba(0, 0, 0, 0.02);
+        }
+
+        [data-theme="dark"] .hero-meta-item {
+            background: linear-gradient(106deg,
+                rgba(42, 36, 29, 0.85) 0%,
+                rgba(34, 29, 23, 0.75) 100%);
+            border-color: rgba(240, 236, 227, 0.09);
+            box-shadow:
+                0 1px 3px rgba(0, 0, 0, 0.25),
+                0 2px 6px rgba(0, 0, 0, 0.18);
+        }
+
+        /* Torn-paper edge sheen — warm dark variant */
+        [data-theme="dark"] .hero-meta-item::after {
+            background: linear-gradient(90deg,
+                rgba(42, 36, 29, 0) 0%,
+                rgba(42, 36, 29, 0.4) 30%,
+                rgba(42, 36, 29, 0.6) 60%,
+                rgba(42, 36, 29, 0.8) 100%);
+        }
+
+        [data-theme="dark"] .hero-meta-item:hover {
+            background: linear-gradient(106deg,
+                rgba(52, 45, 35, 0.95) 0%,
+                rgba(42, 36, 29, 0.9) 100%);
+            border-color: rgba(201, 104, 90, 0.35);
+            box-shadow:
+                0 4px 12px rgba(0, 0, 0, 0.3),
+                0 2px 4px rgba(0, 0, 0, 0.2),
+                0 8px 24px rgba(201, 104, 90, 0.08);
+        }
+
+        /* Per-item accent gradients — dark variants (higher specificity than
+           the light :nth-child rules so they win regardless of source order) */
+        [data-theme="dark"] .hero-meta-item:nth-child(1) {
+            background: linear-gradient(108deg, rgba(52, 45, 35, 0.85) 0%, rgba(201, 104, 90, 0.05) 50%, rgba(34, 29, 23, 0.75) 100%);
+        }
+        [data-theme="dark"] .hero-meta-item:nth-child(2) {
+            background: linear-gradient(104deg, rgba(52, 45, 35, 0.85) 0%, rgba(143, 174, 152, 0.05) 50%, rgba(34, 29, 23, 0.75) 100%);
+        }
+        [data-theme="dark"] .hero-meta-item:nth-child(3) {
+            background: linear-gradient(106deg, rgba(52, 45, 35, 0.85) 0%, rgba(220, 176, 121, 0.05) 50%, rgba(34, 29, 23, 0.75) 100%);
+        }
+
+        /* Project tags — warm dark variants */
+        [data-theme="dark"] .tag {
+            background: linear-gradient(106deg, rgba(46, 40, 31, 0.7) 0%, rgba(34, 29, 23, 0.6) 100%);
+            border-color: rgba(240, 236, 227, 0.12);
+            color: var(--text-secondary);
+        }
+        [data-theme="dark"] .tag:nth-child(1) {
+            background: linear-gradient(106deg, rgba(46, 40, 31, 0.7) 0%, rgba(201, 104, 90, 0.07) 50%, rgba(34, 29, 23, 0.6) 100%);
+        }
+        [data-theme="dark"] .tag:nth-child(2) {
+            background: linear-gradient(104deg, rgba(46, 40, 31, 0.7) 0%, rgba(143, 174, 152, 0.07) 50%, rgba(34, 29, 23, 0.6) 100%);
+        }
+        [data-theme="dark"] .tag:nth-child(3) {
+            background: linear-gradient(108deg, rgba(46, 40, 31, 0.7) 0%, rgba(220, 176, 121, 0.07) 50%, rgba(34, 29, 23, 0.6) 100%);
+        }
+        [data-theme="dark"] .tag:hover {
+            background: linear-gradient(106deg, rgba(56, 48, 38, 0.9) 0%, rgba(46, 40, 31, 0.8) 100%);
+            border-color: rgba(201, 104, 90, 0.3);
         }
 
         /* Each item has unique organic shape */
@@ -2623,7 +2790,7 @@
             gap: 9px;
             padding: 14px 28px;
             background: var(--charcoal);
-            color: white;
+            color: var(--cream);
             text-decoration: none;
             border-radius: 28px;
             font-size: 14px;
@@ -2666,13 +2833,13 @@
         }
 
         .contact-link.secondary {
-            background: white;
+            background: var(--surface-raised);
             color: var(--text-primary);
             border: 0.5px solid var(--border);
         }
 
         .contact-link.secondary::before {
-            background: linear-gradient(135deg, var(--sand) 0%, white 100%);
+            background: linear-gradient(135deg, var(--sand) 0%, var(--surface-raised) 100%);
         }
 
         /* Footer */
@@ -2739,7 +2906,7 @@
             top: -40px;
             left: 0;
             background: var(--charcoal);
-            color: white;
+            color: var(--cream);
             padding: 8px 16px;
             text-decoration: none;
             z-index: 10001;
@@ -2894,6 +3061,12 @@
                 <li role="none"><a href="#about" role="menuitem" data-en="About" data-ko="소개">About</a></li>
                 <li role="none"><a href="#contact" role="menuitem" data-en="Contact" data-ko="연락">Contact</a></li>
                 <li role="none">
+                    <button type="button" id="themeToggle" class="theme-toggle" role="menuitem" aria-label="Toggle dark mode">
+                        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+                    </button>
+                </li>
+                <li role="none">
                     <button type="button" id="langToggle" class="lang-toggle" role="menuitem" aria-label="Toggle Language">
                         <span class="lang-text">한국어</span>
                     </button>
@@ -2915,6 +3088,11 @@
         <a href="#contact" data-en="Contact" data-ko="연락">Contact</a>
         <button type="button" id="mobileLangToggle" class="mobile-lang-toggle" aria-label="Toggle Language">
             <span class="mobile-lang-text">한국어</span>
+        </button>
+        <button type="button" id="mobileThemeToggle" class="mobile-theme-toggle" aria-label="Toggle dark mode">
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+            <span class="mobile-theme-text" data-en="Dark mode" data-ko="다크 모드">Dark mode</span>
         </button>
     </div>
 
@@ -3810,6 +3988,9 @@
                     link.textContent = lang === 'en' ? en : ko;
                 }
             });
+
+            // Keep the dark-mode label in sync with the active language
+            if (typeof updateThemeLabel === 'function') updateThemeLabel();
         }
 
         // Language toggle button event
@@ -3871,6 +4052,56 @@
             currentLang = savedLang;
             updateContent(currentLang);
         }
+
+        // ===== Dark mode =====
+        // The initial theme is applied in <head> (pre-paint) to avoid a flash;
+        // here we wire up the toggles and keep the label/system-sync in order.
+        const THEME_KEY = 'preferredTheme';
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+        function getCurrentTheme() {
+            return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+        }
+
+        function updateThemeLabel() {
+            const el = document.querySelector('.mobile-theme-text');
+            if (!el) return;
+            const isDark = getCurrentTheme() === 'dark';
+            const ko = isDark ? '라이트 모드' : '다크 모드';
+            const en = isDark ? 'Light mode' : 'Dark mode';
+            el.textContent = (typeof currentLang !== 'undefined' && currentLang === 'ko') ? ko : en;
+        }
+
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+            }
+            updateThemeLabel();
+        }
+
+        function toggleTheme() {
+            const next = getCurrentTheme() === 'dark' ? 'light' : 'dark';
+            applyTheme(next);
+            localStorage.setItem(THEME_KEY, next);
+        }
+
+        // Sync the label with whatever theme the pre-paint script chose
+        updateThemeLabel();
+
+        // Follow the OS setting only while the user hasn't made an explicit choice
+        prefersDark.addEventListener('change', (e) => {
+            if (!localStorage.getItem(THEME_KEY)) {
+                applyTheme(e.matches ? 'dark' : 'light');
+            }
+        });
+
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+
+        const mobileThemeToggle = document.getElementById('mobileThemeToggle');
+        if (mobileThemeToggle) mobileThemeToggle.addEventListener('click', toggleTheme);
     </script>
 </body>
 </html>
